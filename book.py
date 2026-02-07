@@ -17,13 +17,16 @@ class LibraryBook(Book):
         self._borrowed = False
     
     def borrow(self):
-        if(self.is_borrowed()):
+        if self.is_borrowed():
             raise Exception("Book already borrowed!")
         
         self._borrowed = True
         
         
     def return_book(self):
+        if not self.isborrowed():
+            raise Exception("Book is not borrowed!")
+        
         self._borrowed = False
         
     def is_borrowed(self):
