@@ -17,15 +17,15 @@ class LibraryBook(Book):
         self._borrowed = False
     
     def borrow(self):
-        if self.is_borrowed():
-            raise Exception("Book already borrowed!")
+        if self._borrowed:
+            raise AlreadyBorrowedBookError()
         
         self._borrowed = True
         
         
     def return_book(self):
-        if not self.isborrowed():
-            raise Exception("Book is not borrowed!")
+        if not self._borrowed:
+            raise BookNotBorrowedError()
         
         self._borrowed = False
         
@@ -33,9 +33,30 @@ class LibraryBook(Book):
         return self._borrowed
         
 
+class BookError(Exception):
+    def __init__(self, message: str):
+        super().__init__(message)
+
+class AlreadyBorrowedBookError(BookError):
+    def __init__(self):
+        super().__init__("Book already borrowed!")
+
+class BookNotBorrowedError(BookError):
+    def __init__(self):
+        super().__init__("Book was not yet borrowed!")
+
+
 book_1 = Book("Glaze 2", "Admin", 30)
 book_2 = Book("Glaze 1", "Admin", 27)
 book_3 = LibraryBook("The Blast", "Admin", 30)
+
+book_3.borrow()
+
+try:
+    book_3.borrow()
+except AlreadyBorrowedBookError as e:
+    print(f"{e}\n")
+
 
 print("Book 1: \n", book_1.describe())
 print("Book 2: \n", book_2.describe())
